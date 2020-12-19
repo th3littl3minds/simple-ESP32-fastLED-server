@@ -20,20 +20,34 @@ uint8_t hue4 = 100;
 uint8_t hue5 = 150;
 uint8_t hue6 = 60; //variable for Colour-Chan
 
+// defining HTML & CSS contents which are displayed in browser
+String HTML = "<!DOCTYPE html>\
+<html>\
+<body>\
+<h1>Hello cruel world</h1>\
+<a href='/slow'><button>slow down</button></a>\
+<a href='/fast'><button>hurry up</button></a>\
+</body>\
+</html>";
+
 void fast() {
     Serial.println("hello cruel fast world"); 
     isFast = 1; //set variable in line 11 to true
-  }
+}
 
 void slow() {
     Serial.println("hello cruel slow world");
     isFast = 0; //set variable "isFast" (defined above) to false
-  }
+}
+
+void handleRoot() {
+    server.send(200, "text/html", HTML);
+}
 
 void setup_routing() {      
   server.on("/fast", fast); // calls the wuermli function if you access the page 192.168.1.22/fast
   server.on("/slow", slow); // calls the wuermli function if you access the page 192.168.1.22/slow
- 
+  server.on("/", handleRoot)
   // start server    
   server.begin(); 
 }
@@ -47,8 +61,8 @@ void setup() {        //Setup to flash the Chip
   Serial.begin(57600); //sets the data  Rate on Serial  0=No Data
  
   ArduinoOTA.setHostname("leds"); //Hostname to show when looking for OTA 
-    setupOTA("leds", mySSID, myPASSWORD); //Set up OTA (Hostname,mySSID and myPASSWORD defined in the credentials.h file)
-    setup_routing(); //calls function setup_routing above
+  setupOTA("leds", mySSID, myPASSWORD); //Set up OTA (Hostname,mySSID and myPASSWORD defined in the credentials.h file)
+  setup_routing(); //calls function setup_routing above
 }
 
 
