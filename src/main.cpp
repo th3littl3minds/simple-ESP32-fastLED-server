@@ -1,13 +1,14 @@
-#include <Arduino.h>
-#include <FastLED.h>
-#include "OTA.h"
-#include <WebServer.h>
+#include <Arduino.h>  //Arduino Libary
+#include <FastLED.h>  //Fasled Libary
+#include "OTA.h"      // Over the Air configuration
+#include <WebServer.h>  // Libary for webserver
   
 #define NUM_LEDS  300 //Number of LED's in the Strip
 #define LED_PIN   2   //Pin on The ESP 32
 
 WebServer server(80); // listens to port 80
 
+bool isFast = 0;  //define variable "isFast" to false
 
 CRGB leds[NUM_LEDS];  //Defines the RGB Pixel 
 uint8_t hue  = 0;
@@ -15,112 +16,24 @@ uint8_t hue2 = 30;
 uint8_t hue3 = 255;
 uint8_t hue4 = 100;
 uint8_t hue5 = 150;
-uint8_t hue6 = 60;
+uint8_t hue6 = 60; //variable for Colour-Chan
 
-void fuerli() {
-    Serial.print("hello cruel fuerli world");
-    uint16_t sinBeat   = beatsin16(1, 0, NUM_LEDS - 1, 0, 0);
-    uint16_t sinBeat2  = beatsin16(1, 0, NUM_LEDS - 1, 0, 21845);
-    uint16_t sinBeat3  = beatsin16(1, 0, NUM_LEDS - 1, 0, 43690);
-    uint16_t sinBeat4  = beatsin16(1, 0, NUM_LEDS - 1, 0, 10000);
-    uint16_t sinBeat5  = beatsin16(1, 0, NUM_LEDS - 1, 0, 30845);
-    uint16_t sinBeat6  = beatsin16(1, 0, NUM_LEDS - 1, 0, 55690);
-    
-    leds[sinBeat]   = CHSV(hue,  255, 255);
-    leds[sinBeat2]  = CHSV(hue2, 255, 255);
-    leds[sinBeat3]  = CHSV(hue3, 255, 255);
-    leds[sinBeat4]  = CHSV(hue4, 255, 255);
-    leds[sinBeat5]  = CHSV(hue5, 255, 255);
-    leds[sinBeat6]  = CHSV(hue6, 255, 255);
-
-    EVERY_N_MILLISECONDS(30){
-      hue++;
-    } 
-    
-    EVERY_N_MILLISECONDS(19){
-      hue2++;
-    }
-
-    EVERY_N_MILLISECONDS(1){
-      hue3++;
-    }
-
-    EVERY_N_MILLISECONDS(40){
-      hue4++;
-    }
-    
-    EVERY_N_MILLISECONDS(50){
-      hue5++;
-    }
-    
-    EVERY_N_MILLISECONDS(60){
-      hue6++;
-    }
-    
-    EVERY_N_MILLISECONDS(1){
-      for(int i = 0; i < 4; i++) {
-        blur1d(leds, NUM_LEDS, 100);
-      }
-    }
-    
-    fadeToBlackBy(leds, NUM_LEDS,2);
+void fast() {
+    Serial.println("hello cruel fast world"); 
+    isFast = 1; //set variable in line 11 to true
   }
 
-void wuermli() {
-    Serial.print("hello cruel wuermli world");
-    uint16_t sinBeat   = beatsin16(1, 0, NUM_LEDS - 1, 0, 0);
-    uint16_t sinBeat2  = beatsin16(1, 0, NUM_LEDS - 1, 0, 21845);
-    uint16_t sinBeat3  = beatsin16(1, 0, NUM_LEDS - 1, 0, 43690);
-    uint16_t sinBeat4  = beatsin16(1, 0, NUM_LEDS - 1, 0, 10000);
-    uint16_t sinBeat5  = beatsin16(1, 0, NUM_LEDS - 1, 0, 30845);
-    uint16_t sinBeat6  = beatsin16(1, 0, NUM_LEDS - 1, 0, 55690);
-    
-    leds[sinBeat]   = CHSV(hue,  255, 255);
-    leds[sinBeat2]  = CHSV(hue2, 255, 255);
-    leds[sinBeat3]  = CHSV(hue3, 255, 255);
-    leds[sinBeat4]  = CHSV(hue4, 255, 255);
-    leds[sinBeat5]  = CHSV(hue5, 255, 255);
-    leds[sinBeat6]  = CHSV(hue6, 255, 255);
-
-    EVERY_N_MILLISECONDS(300){
-      hue++;
-    } 
-    
-    EVERY_N_MILLISECONDS(190){
-      hue2++;
-    }
-
-    EVERY_N_MILLISECONDS(10){
-      hue3++;
-    }
-
-    EVERY_N_MILLISECONDS(400){
-      hue4++;
-    }
-    
-    EVERY_N_MILLISECONDS(500){
-      hue5++;
-    }
-    
-    EVERY_N_MILLISECONDS(600){
-      hue6++;
-    }
-    
-    EVERY_N_MILLISECONDS(1){
-      for(int i = 0; i < 4; i++) {
-        blur1d(leds, NUM_LEDS, 100);
-      }
-    }
-    
-    fadeToBlackBy(leds, NUM_LEDS,2);
+void slow() {
+    Serial.println("hello cruel slow world");
+    isFast = 0; //set variable "isFast" (defined above) to false
   }
 
-void setup_routing() {  	 	 
-  server.on("/wuermli", wuermli); // calls the wuermli function if you access the page 192.168.1.22/wuermli
-  server.on("/fuerli", fuerli);
+void setup_routing() {      
+  server.on("/fast", fast); // calls the wuermli function if you access the page 192.168.1.22/fast
+  server.on("/slow", slow); // calls the wuermli function if you access the page 192.168.1.22/slow
  
-  // start server	 	 
-  server.begin();
+  // start server    
+  server.begin(); 
 }
 
 
@@ -129,11 +42,11 @@ void setup() {        //Setup to flash the Chip
   FastLED.addLeds<WS2812B, LED_PIN, RGB>(leds, NUM_LEDS); //Type of LED, What pin on the Board, Order of the RGB
   FastLED.setBrightness(255); //Brightness level of the LED's (0-255)
 
-  Serial.begin(57600); //sets the data  Rate on Serial (USB) 0=No Data
+  Serial.begin(57600); //sets the data  Rate on Serial  0=No Data
  
-  ArduinoOTA.setHostname("LED_Band_Gitarrene"); //Hostname to show when looking for OTA 
-    setupOTA("LED_Band_Gitarrene", mySSID, myPASSWORD); //Set up OTA (Hostname,mySSID and myPASSWORD defined in the credentials.h file)
-  setup_routing();
+  ArduinoOTA.setHostname("leds"); //Hostname to show when looking for OTA 
+    setupOTA("leds", mySSID, myPASSWORD); //Set up OTA (Hostname,mySSID and myPASSWORD defined in the credentials.h file)
+    setup_routing(); //calls function setup_routing above
 }
 
 
@@ -142,7 +55,102 @@ void loop() { //Loop to Flash
 
   // put main code here
 
-  server.handleClient();
+  server.handleClient(); // handelt de kliänt
 
-  FastLED.show();
+  if (isFast == 0) { // if variable "isFast" set to 0 via port 80 on 192.168.1.22/slow this code runs until elif below
+    uint16_t sinBeat   = beatsin16(1, 0, NUM_LEDS - 1, 0, 0);
+    uint16_t sinBeat2  = beatsin16(1, 0, NUM_LEDS - 1, 0, 21845);
+    uint16_t sinBeat3  = beatsin16(1, 0, NUM_LEDS - 1, 0, 43690);
+    uint16_t sinBeat4  = beatsin16(1, 0, NUM_LEDS - 1, 0, 10000);
+    uint16_t sinBeat5  = beatsin16(1, 0, NUM_LEDS - 1, 0, 30845);
+    uint16_t sinBeat6  = beatsin16(1, 0, NUM_LEDS - 1, 0, 55690); //betsin16 worms slow
+    
+    leds[sinBeat]   = CHSV(hue,  255, 255);
+    leds[sinBeat2]  = CHSV(hue2, 255, 255);
+    leds[sinBeat3]  = CHSV(hue3, 255, 255);
+    leds[sinBeat4]  = CHSV(hue4, 255, 255);
+    leds[sinBeat5]  = CHSV(hue5, 255, 255);
+    leds[sinBeat6]  = CHSV(hue6, 255, 255); // defines the colour in each betsin16 changing in worms slow
+
+    EVERY_N_MILLISECONDS(30){
+    hue++;
+    } 
+    
+    EVERY_N_MILLISECONDS(19){
+    hue2++;
+    }
+
+    EVERY_N_MILLISECONDS(1){
+    hue3++;
+    }
+
+    EVERY_N_MILLISECONDS(40){
+    hue4++;
+    }
+    
+    EVERY_N_MILLISECONDS(50){
+    hue5++;
+    }
+    
+    EVERY_N_MILLISECONDS(60){
+    hue6++;
+    }                           //increases hue ever n milliseconds in slow
+    
+    EVERY_N_MILLISECONDS(1){
+    for(int i = 0; i < 4; i++) {
+        blur1d(leds, NUM_LEDS, 100);
+    }
+    }                           // blurs the LEDS out in the beatsin16 function in slow
+    
+    fadeToBlackBy(leds, NUM_LEDS,2);
+  } else if (isFast == 1) {     //if variable isFast is set to 1 this code runs instead of slow above
+    uint16_t sinBeat   = beatsin16(3, 0, NUM_LEDS - 1, 0, 0);
+    uint16_t sinBeat2  = beatsin16(3, 0, NUM_LEDS - 1, 0, 21845);
+    uint16_t sinBeat3  = beatsin16(3, 0, NUM_LEDS - 1, 0, 43690);
+    uint16_t sinBeat4  = beatsin16(3, 0, NUM_LEDS - 1, 0, 10000);
+    uint16_t sinBeat5  = beatsin16(3, 0, NUM_LEDS - 1, 0, 30845);
+    uint16_t sinBeat6  = beatsin16(3, 0, NUM_LEDS - 1, 0, 55690); //beatsin function in "fast"
+    
+    leds[sinBeat]   = CHSV(hue,  255, 255);
+    leds[sinBeat2]  = CHSV(hue2, 255, 255);
+    leds[sinBeat3]  = CHSV(hue3, 255, 255);
+    leds[sinBeat4]  = CHSV(hue4, 255, 255);
+    leds[sinBeat5]  = CHSV(hue5, 255, 255);
+
+leds[sinBeat6]  = CHSV(hue6, 255, 255); // Defines colours in worms "fast"
+ 
+    EVERY_N_MILLISECONDS(3){
+      hue++;
+    } 
+    
+    EVERY_N_MILLISECONDS(6){
+      hue2++;
+    }
+
+    EVERY_N_MILLISECONDS(2){
+      hue3++;
+    }
+
+    EVERY_N_MILLISECONDS(8){
+      hue4++;
+    }
+    
+    EVERY_N_MILLISECONDS(10){
+      hue5++;
+    }
+    
+    EVERY_N_MILLISECONDS(12){
+      hue6++;
+    }                         //changes hue ever n milliseconds in "fast"
+    
+    EVERY_N_MILLISECONDS(1){
+      for(int i = 0; i < 4; i++) {
+        blur1d(leds, NUM_LEDS, 100);
+      }                                   //blurs leds in "fast"
+    }
+    
+    fadeToBlackBy(leds, NUM_LEDS,2);      //fasde to black by in "fast"
+  }
+
+  FastLED.show(); //runs led program repeated because in "Loop"
 }
