@@ -17,15 +17,6 @@ uint8_t hue4 = 100;
 uint8_t hue5 = 150;
 uint8_t hue6 = 60;
 
-// setup API resources
-void setup_routing() {  	 	 
-  server.on("/wuermli", wuermli); // calls the wuermli function if you access the page 192.168.1.22/wuermli
-  server.on("/fuerli", fuerli);
- 
-  // start server	 	 
-  server.begin();
-}
-
 void setup() {        //Setup to flash the Chip
   
   FastLED.addLeds<WS2812B, LED_PIN, RGB>(leds, NUM_LEDS); //Type of LED, What pin on the Board, Order of the RGB
@@ -144,3 +135,12 @@ void wuermli() {
     
     fadeToBlackBy(leds, NUM_LEDS,2);
   }
+
+  // setup API resources
+void setup_routing() {  	 	 
+  server.on("/wuermli", wuermli); // calls the wuermli function if you access the page 192.168.1.22/wuermli
+  server.on("/fuerli", fuerli);
+ 
+  // start server	 	 
+  server.begin();
+}
