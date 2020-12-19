@@ -18,6 +18,7 @@ uint8_t hue5 = 150;
 uint8_t hue6 = 60;
 
 void fuerli() {
+    Serial.print("hello cruel fuerli world");
     uint16_t sinBeat   = beatsin16(1, 0, NUM_LEDS - 1, 0, 0);
     uint16_t sinBeat2  = beatsin16(1, 0, NUM_LEDS - 1, 0, 21845);
     uint16_t sinBeat3  = beatsin16(1, 0, NUM_LEDS - 1, 0, 43690);
@@ -66,6 +67,7 @@ void fuerli() {
   }
 
 void wuermli() {
+    Serial.print("hello cruel wuermli world");
     uint16_t sinBeat   = beatsin16(1, 0, NUM_LEDS - 1, 0, 0);
     uint16_t sinBeat2  = beatsin16(1, 0, NUM_LEDS - 1, 0, 21845);
     uint16_t sinBeat3  = beatsin16(1, 0, NUM_LEDS - 1, 0, 43690);
