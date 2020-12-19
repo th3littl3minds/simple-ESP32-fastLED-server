@@ -17,29 +17,6 @@ uint8_t hue4 = 100;
 uint8_t hue5 = 150;
 uint8_t hue6 = 60;
 
-void setup() {        //Setup to flash the Chip
-  
-  FastLED.addLeds<WS2812B, LED_PIN, RGB>(leds, NUM_LEDS); //Type of LED, What pin on the Board, Order of the RGB
-  FastLED.setBrightness(255); //Brightness level of the LED's (0-255)
-
-  Serial.begin(57600); //sets the data  Rate on Serial (USB) 0=No Data
- 
-  ArduinoOTA.setHostname("LED_Band_Gitarrene"); //Hostname to show when looking for OTA 
-    setupOTA("LED_Band_Gitarrene", mySSID, myPASSWORD); //Set up OTA (Hostname,mySSID and myPASSWORD defined in the credentials.h file)
-  
-}
-
-
-void loop() { //Loop to Flash
-  ArduinoOTA.handle(); //OTA function needs to get called once in a while
-
-  // put main code here
-
-  server.handleClient();
-
-  FastLED.show();
-}
-
 void fuerli() {
     uint16_t sinBeat   = beatsin16(1, 0, NUM_LEDS - 1, 0, 0);
     uint16_t sinBeat2  = beatsin16(1, 0, NUM_LEDS - 1, 0, 21845);
@@ -135,15 +112,38 @@ void wuermli() {
     
     fadeToBlackBy(leds, NUM_LEDS,2);
   }
-  
+
 Serial.print("Connected. IP: ");
 Serial.println(WiFi.localIP());
 
-  // setup API resources
 void setup_routing() {  	 	 
   server.on("/wuermli", wuermli); // calls the wuermli function if you access the page 192.168.1.22/wuermli
   server.on("/fuerli", fuerli);
  
   // start server	 	 
   server.begin();
+}
+
+
+void setup() {        //Setup to flash the Chip
+  
+  FastLED.addLeds<WS2812B, LED_PIN, RGB>(leds, NUM_LEDS); //Type of LED, What pin on the Board, Order of the RGB
+  FastLED.setBrightness(255); //Brightness level of the LED's (0-255)
+
+  Serial.begin(57600); //sets the data  Rate on Serial (USB) 0=No Data
+ 
+  ArduinoOTA.setHostname("LED_Band_Gitarrene"); //Hostname to show when looking for OTA 
+    setupOTA("LED_Band_Gitarrene", mySSID, myPASSWORD); //Set up OTA (Hostname,mySSID and myPASSWORD defined in the credentials.h file)
+  setup_routing()
+}
+
+
+void loop() { //Loop to Flash
+  ArduinoOTA.handle(); //OTA function needs to get called once in a while
+
+  // put main code here
+
+  server.handleClient();
+
+  FastLED.show();
 }
