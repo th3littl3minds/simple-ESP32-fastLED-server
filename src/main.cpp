@@ -44,7 +44,7 @@ void loop() { //Loop to Flash
 
   // put main code here
 
-
+  server.handleClient();
 
   FastLED.show();
 }
