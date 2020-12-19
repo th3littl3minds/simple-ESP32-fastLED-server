@@ -103,27 +103,27 @@ void wuermli() {
     leds[sinBeat5]  = CHSV(hue5, 255, 255);
     leds[sinBeat6]  = CHSV(hue6, 255, 255);
 
-    EVERY_N_MILLISECONDS(30){
+    EVERY_N_MILLISECONDS(300){
       hue++;
     } 
     
-    EVERY_N_MILLISECONDS(19){
+    EVERY_N_MILLISECONDS(190){
       hue2++;
     }
 
-    EVERY_N_MILLISECONDS(1){
+    EVERY_N_MILLISECONDS(10){
       hue3++;
     }
 
-    EVERY_N_MILLISECONDS(40){
+    EVERY_N_MILLISECONDS(400){
       hue4++;
     }
     
-    EVERY_N_MILLISECONDS(50){
+    EVERY_N_MILLISECONDS(500){
       hue5++;
     }
     
-    EVERY_N_MILLISECONDS(60){
+    EVERY_N_MILLISECONDS(600){
       hue6++;
     }
     
