@@ -135,6 +135,9 @@ void wuermli() {
     
     fadeToBlackBy(leds, NUM_LEDS,2);
   }
+  
+Serial.print("Connected. IP: ");
+Serial.println(WiFi.localIP());
 
   // setup API resources
 void setup_routing() {  	 	 
