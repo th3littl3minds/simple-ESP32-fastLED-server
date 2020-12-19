@@ -115,9 +115,6 @@ void wuermli() {
     fadeToBlackBy(leds, NUM_LEDS,2);
   }
 
-Serial.print("Connected. IP: ");
-Serial.println(WiFi.localIP());
-
 void setup_routing() {  	 	 
   server.on("/wuermli", wuermli); // calls the wuermli function if you access the page 192.168.1.22/wuermli
   server.on("/fuerli", fuerli);
@@ -136,7 +133,7 @@ void setup() {        //Setup to flash the Chip
  
   ArduinoOTA.setHostname("LED_Band_Gitarrene"); //Hostname to show when looking for OTA 
     setupOTA("LED_Band_Gitarrene", mySSID, myPASSWORD); //Set up OTA (Hostname,mySSID and myPASSWORD defined in the credentials.h file)
-  setup_routing()
+  setup_routing();
 }
 
 
